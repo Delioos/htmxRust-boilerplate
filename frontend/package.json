@@ -1,1 +1,21 @@
-{ "dependencies": { "htmx.org": "2.0.2", "sass": "^1.77.8" } }
+{
+  "name": "rust-htmx-d3-meowmeowmeow",
+  "author": "Roule <roulee@pm.me>",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "start": "bun run --watch server.ts",
+    "build:css": "sass src/styles/main.scss:src/styles.css --style compressed",
+    "watch:css": "sass src/styles/main.scss:src/styles.css --watch",
+    "build": "bun build ./src/app.ts --outdir ./src --minify"
+  },
+  "dependencies": {
+    "htmx.org": "^1.9.10",
+    "d3": "^7.8.5"
+  },
+  "devDependencies": {
+    "bun-types": "latest",
+    "sass": "^1.69.5",
+    "@types/d3": "^7.4.3"
+  }
+}
