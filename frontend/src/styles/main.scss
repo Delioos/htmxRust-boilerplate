@@ -4,25 +4,44 @@ body {
   font-family: Arial, sans-serif;
   background-color: $background-color;
   color: $text-color;
+  margin: 0;
+  padding: 20px;
 }
 
 h1 {
   color: $primary-color;
+  text-align: center;
 }
 
-button {
-  background-color: $primary-color;
-  color: white;
-  border: none;
-  padding: 10px 20px;
-  cursor: pointer;
-  
-  &:hover {
-    background-color: darken($primary-color, 10%);
+.dashboard {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  gap: 20px;
+}
+
+.chart-container {
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  width: calc(33% - 20px);
+  min-width: 300px;
+
+  h2 {
+    color: $primary-color;
+    margin-top: 0;
   }
 }
 
-#chart {
-  margin-top: 20px;
-  border: 1px solid $border-color;
+@media (max-width: 1200px) {
+  .chart-container {
+    width: calc(50% - 20px);
+  }
+}
+
+@media (max-width: 768px) {
+  .chart-container {
+    width: 100%;
+  }
 }

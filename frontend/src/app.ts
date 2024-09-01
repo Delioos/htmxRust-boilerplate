@@ -1,39 +1,90 @@
 import * as d3 from 'd3';
 import 'htmx.org';
 
-interface DataPoint {
-    x: number;
-    y: number;
+interface AssetAllocation {
+    asset: string;
+    value: number;
 }
 
-function createChart(data: DataPoint[]) {
-    const margin = {top: 20, right: 20, bottom: 30, left: 40};
+interface PortfolioPerformance {
+    date: Date;
+    value: number;
+}
+
+interface AssetReturn {
+    asset: string;
+    return: number;
+}
+
+function createPieChart(data: AssetAllocation[]) {
+    const width = 450;
+    const height = 450;
+    const margin = 40;
+
+    const radius = Math.min(width, height) / 2 - margin;
+
+    const svg = d3.select("#pie-chart")
+        .append("svg")
+        .attr("width", width)
+        .attr("height", height)
+        .append("g")
+        .attr("transform", `translate(${width / 2},${height / 2})`);
+
+    const color = d3.scaleOrdinal<string>()
+        .domain(data.map(d => d.asset))
+        .range(d3.schemeDark2);
+
+    const pie = d3.pie<AssetAllocation>().value(d => d.value);
+
+    const arc = d3.arc<d3.PieArcDatum<AssetAllocation>>()
+        .innerRadius(0)
+        .outerRadius(radius);
+
+    const arcs = svg.selectAll("arc")
+        .data(pie(data))
+        .enter()
+        .append("g");
+
+    arcs.append("path")
+        .attr("d", arc)
+        .attr("fill", d => color(d.data.asset));
+
+    arcs.append("text")
+        .attr("transform", d => `translate(${arc.centroid(d)})`)
+        .attr("text-anchor", "middle")
+        .text(d => d.data.asset);
+}
+
+function createLineChart(data: PortfolioPerformance[]) {
+    const margin = {top: 20, right: 20, bottom: 30, left: 50};
     const width = 600 - margin.left - margin.right;
     const height = 400 - margin.top - margin.bottom;
 
-    const svg = d3.select("#chart")
+    const svg = d3.select("#line-chart")
         .append("svg")
         .attr("width", width + margin.left + margin.right)
         .attr("height", height + margin.top + margin.bottom)
         .append("g")
         .attr("transform", `translate(${margin.left},${margin.top})`);
 
-    const x = d3.scaleLinear()
-        .domain([0, d3.max(data, d => d.x) as number])
+    const x = d3.scaleTime()
+        .domain(d3.extent(data, d => d.date) as [Date, Date])
         .range([0, width]);
 
     const y = d3.scaleLinear()
-        .domain([0, d3.max(data, d => d.y) as number])
+        .domain([0, d3.max(data, d => d.value) as number])
         .range([height, 0]);
 
-    svg.selectAll("circle")
-        .data(data)
-        .enter()
-        .append("circle")
-        .attr("cx", d => x(d.x))
-        .attr("cy", d => y(d.y))
-        .attr("r", 5)
-        .attr("fill", "steelblue");
+    const line = d3.line<PortfolioPerformance>()
+        .x(d => x(d.date))
+        .y(d => y(d.value));
+
+    svg.append("path")
+        .datum(data)
+        .attr("fill", "none")
+        .attr("stroke", "steelblue")
+        .attr("stroke-width", 1.5)
+        .attr("d", line);
 
     svg.append("g")
         .attr("transform", `translate(0,${height})`)
@@ -43,11 +94,71 @@ function createChart(data: DataPoint[]) {
         .call(d3.axisLeft(y));
 }
 
-// HTMX event listener
-document.body.addEventListener('htmx:afterSwap', function(event) {
-    const result = document.getElementById('result');
-    if (result && result.textContent) {
-        const data: DataPoint[] = JSON.parse(result.textContent);
-        createChart(data);
-    }
+function createBarChart(data: AssetReturn[]) {
+    const margin = {top: 20, right: 20, bottom: 30, left: 40};
+    const width = 600 - margin.left - margin.right;
+    const height = 400 - margin.top - margin.bottom;
+
+    const svg = d3.select("#bar-chart")
+        .append("svg")
+        .attr("width", width + margin.left + margin.right)
+        .attr("height", height + margin.top + margin.bottom)
+        .append("g")
+        .attr("transform", `translate(${margin.left},${margin.top})`);
+
+    const x = d3.scaleBand()
+        .range([0, width])
+        .padding(0.1);
+
+    const y = d3.scaleLinear()
+        .range([height, 0]);
+
+    x.domain(data.map(d => d.asset));
+    y.domain([0, d3.max(data, d => d.return) as number]);
+
+    svg.selectAll(".bar")
+        .data(data)
+        .enter().append("rect")
+        .attr("class", "bar")
+        .attr("x", d => x(d.asset) as number)
+        .attr("width", x.bandwidth())
+        .attr("y", d => y(d.return))
+        .attr("height", d => height - y(d.return));
+
+    svg.append("g")
+        .attr("transform", `translate(0,${height})`)
+        .call(d3.axisBottom(x));
+
+    svg.append("g")
+        .call(d3.axisLeft(y));
+}
+
+// Sample data
+const assetAllocation: AssetAllocation[] = [
+    {asset: "Stocks", value: 50},
+    {asset: "Bonds", value: 30},
+    {asset: "Real Estate", value: 15},
+    {asset: "Cash", value: 5}
+];
+
+const portfolioPerformance: PortfolioPerformance[] = [
+    {date: new Date("2023-01-01"), value: 100000},
+    {date: new Date("2023-02-01"), value: 102000},
+    {date: new Date("2023-03-01"), value: 105000},
+    {date: new Date("2023-04-01"), value: 103000},
+    {date: new Date("2023-05-01"), value: 106000}
+];
+
+const assetReturns: AssetReturn[] = [
+    {asset: "Stocks", return: 7.5},
+    {asset: "Bonds", return: 3.2},
+    {asset: "Real Estate", return: 5.8},
+    {asset: "Cash", return: 1.1}
+];
+
+// Create charts when the page loads
+window.addEventListener('load', () => {
+    createPieChart(assetAllocation);
+    createLineChart(portfolioPerformance);
+    createBarChart(assetReturns);
 });
