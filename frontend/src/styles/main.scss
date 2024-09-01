@@ -1,47 +1,132 @@
-@import 'variables';
+// Variables
+$light-purple: #E178C5;
+$light-pink: #FF8EF5;
+$light-peach: #FFB38E;
+$light-yellow: #FFFDCB;
 
-body {
-  font-family: Arial, sans-serif;
-  background-color: $background-color;
-  color: $text-color;
-  margin: 0;
-  padding: 20px;
+$dark-navy: #180161;
+$dark-purple: #4F1787;
+$dark-redpink: #EB3678;
+$dark-orange: #FB773C;
+
+// Mixins
+@mixin glass-effect {
+  background-color: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-h1 {
-  color: $primary-color;
-  text-align: center;
+body {
+  font-family: 'Arial', sans-serif;
+  margin: 0;
+  padding: 20px;
+  transition: background-color 0.3s, color 0.3s;
+
+  &.light-mode {
+    background-color: $light-yellow;
+    color: $dark-navy;
+  }
+
+  &.dark-mode {
+    background-color: $dark-navy;
+    color: $light-yellow;
+  }
+}
+
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+
+  h1 {
+    margin: 0;
+  }
+
+  #theme-switch {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    
+    .light-mode & {
+      background-color: $light-purple;
+      color: white;
+    }
+
+    .dark-mode & {
+      background-color: $dark-purple;
+      color: white;
+    }
+  }
 }
 
 .dashboard {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-around;
+  display: grid;
+  grid-template-rows: auto auto auto;
   gap: 20px;
 }
 
-.chart-container {
-  background-color: white;
-  border-radius: 8px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+.main-chart, .secondary-charts, .chart-container, .positions-table {
+  @include glass-effect;
   padding: 20px;
-  width: calc(33% - 20px);
-  min-width: 300px;
+}
 
-  h2 {
-    color: $primary-color;
-    margin-top: 0;
+.main-chart {
+  grid-row: 1;
+}
+
+.secondary-charts {
+  grid-row: 2;
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+
+  .chart-container {
+    flex: 1;
   }
 }
 
-@media (max-width: 1200px) {
-  .chart-container {
-    width: calc(50% - 20px);
-  }
-}
+.positions-table {
+  grid-row: 3;
+  overflow-x: auto;
 
-@media (max-width: 768px) {
-  .chart-container {
+  table {
     width: 100%;
+    border-collapse: collapse;
+
+    th, td {
+      padding: 10px;
+      text-align: left;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    th {
+      .light-mode & {
+        background-color: $light-pink;
+      }
+
+      .dark-mode & {
+        background-color: $dark-redpink;
+      }
+    }
+
+    tr:nth-child(even) {
+      .light-mode & {
+        background-color: rgba(255, 255, 255, 0.05);
+      }
+
+      .dark-mode & {
+        background-color: rgba(0, 0, 0, 0.05);
+      }
+    }
+  }
+}
+
+// Responsive design
+@media (max-width: 768px) {
+  .secondary-charts {
+    flex-direction: column;
   }
 }

@@ -133,6 +133,52 @@ function createBarChart(data: AssetReturn[]) {
         .call(d3.axisLeft(y));
 }
 
+interface Position {
+    asset: string;
+    type: string;
+    baseMargin: number;
+    dateOpened: Date;
+    stopLoss: number | null;
+    takeProfit: number | null;
+    leverage: number | null;
+    dateClosed: Date | null;
+    performance: number;
+    brokerUrl: string;
+}
+
+function populatePositionsTable(data: Position[]) {
+    const tbody = d3.select('#positions tbody');
+    
+    tbody.selectAll('tr')
+        .data(data)
+        .enter()
+        .append('tr')
+        .html(d => `
+            <td>${d.asset}</td>
+            <td>${d.type}</td>
+            <td>${d.baseMargin}</td>
+            <td>${d.dateOpened.toLocaleDateString()}</td>
+            <td>${d.stopLoss !== null ? d.stopLoss : 'N/A'}</td>
+            <td>${d.takeProfit !== null ? d.takeProfit : 'N/A'}</td>
+            <td>${d.leverage !== null ? d.leverage : 'N/A'}</td>
+            <td>${d.dateClosed !== null ? d.dateClosed.toLocaleDateString() : 'Open'}</td>
+            <td>${d.performance.toFixed(2)}%</td>
+            <td><a href="${d.brokerUrl}" target="_blank">View</a></td>
+        `);
+}
+
+function setupThemeSwitch() {
+    const themeSwitch = document.getElementById('theme-switch');
+    const body = document.body;
+
+    if (themeSwitch) {
+        themeSwitch.addEventListener('click', () => {
+            body.classList.toggle('light-mode');
+            body.classList.toggle('dark-mode');
+        });
+    }
+}
+
 // Sample data
 const assetAllocation: AssetAllocation[] = [
     {asset: "Stocks", value: 50},
@@ -156,9 +202,45 @@ const assetReturns: AssetReturn[] = [
     {asset: "Cash", return: 1.1}
 ];
 
+const samplePositions: Position[] = [
+    {
+        asset: "AAPL",
+        type: "Stock",
+        baseMargin: 1000,
+        dateOpened: new Date("2023-01-15"),
+        stopLoss: 135,
+        takeProfit: 180,
+        leverage: null,
+        dateClosed: null,
+        performance: 12.5,
+        brokerUrl: "https://example-broker.com/AAPL"
+    },
+    {
+        asset: "BTC/USD",
+        type: "Crypto",
+        baseMargin: 5000,
+        dateOpened: new Date("2023-03-01"),
+        stopLoss: 25000,
+        takeProfit: 40000,
+        leverage: 2,
+        dateClosed: new Date("2023-06-15"),
+        performance: -5.2,
+        brokerUrl: "https://example-crypto-exchange.com/BTC-USD"
+    },
+    // Add more sample positions as needed
+];
+
+
+
 // Create charts when the page loads
 window.addEventListener('load', () => {
     createPieChart(assetAllocation);
     createLineChart(portfolioPerformance);
     createBarChart(assetReturns);
+
+    populatePositionsTable(samplePositions);
+    setupThemeSwitch();
+
+    // Set initial theme
+    document.body.classList.add('light-mode');
 });

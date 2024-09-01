@@ -10,20 +10,47 @@
     <link rel="stylesheet" href="/styles.css">
 </head>
 <body>
-    <h1>Portfolio Management Dashboard</h1>
-    <div class="dashboard">
-        <div class="chart-container">
-            <h2>Asset Allocation</h2>
-            <div id="pie-chart"></div>
-        </div>
-        <div class="chart-container">
-            <h2>Portfolio Performance</h2>
+    <header>
+        <h1>Portfolio Management Dashboard</h1>
+        <button id="theme-switch">Toggle Theme</button>
+    </header>
+    <main class="dashboard">
+        <section class="main-chart">
+            <h2>Portfolio Performance (Last Year)</h2>
             <div id="line-chart"></div>
-        </div>
-        <div class="chart-container">
-            <h2>Asset Returns</h2>
-            <div id="bar-chart"></div>
-        </div>
-    </div>
+        </section>
+        <section class="secondary-charts">
+            <div class="chart-container">
+                <h2>Asset Allocation</h2>
+                <div id="pie-chart"></div>
+            </div>
+            <div class="chart-container">
+                <h2>Asset Returns</h2>
+                <div id="bar-chart"></div>
+            </div>
+        </section>
+        <section class="positions-table">
+            <h2>Positions</h2>
+            <table id="positions">
+                <thead>
+                    <tr>
+                        <th>Asset</th>
+                        <th>Type</th>
+                        <th>Base Margin</th>
+                        <th>Date Opened</th>
+                        <th>Stop Loss</th>
+                        <th>Take Profit</th>
+                        <th>Leverage</th>
+                        <th>Date Closed</th>
+                        <th>Performance</th>
+                        <th>Broker</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Table rows will be populated dynamically -->
+                </tbody>
+            </table>
+        </section>
+    </main>
 </body>
 </html>
