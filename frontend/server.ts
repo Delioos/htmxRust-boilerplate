@@ -6,6 +6,7 @@ const server = serve({
   port: 3000,
   fetch(req) {
     const url = new URL(req.url);
+    log(req);
     let filePath = path.join("src", url.pathname);
 
     // Serve index.html for the root path
@@ -30,5 +31,9 @@ const server = serve({
     }
   },
 });
+
+let log = (req: Request) => {
+  console.log(`${req.method} received at ${req.url}`);
+};
 
 console.log(`Listening on http://localhost:${server.port}...`);
