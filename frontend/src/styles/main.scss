@@ -1,0 +1,28 @@
+@import 'variables';
+
+body {
+  font-family: Arial, sans-serif;
+  background-color: $background-color;
+  color: $text-color;
+}
+
+h1 {
+  color: $primary-color;
+}
+
+button {
+  background-color: $primary-color;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+  
+  &:hover {
+    background-color: darken($primary-color, 10%);
+  }
+}
+
+#chart {
+  margin-top: 20px;
+  border: 1px solid $border-color;
+}

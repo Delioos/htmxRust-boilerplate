@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rust + HTMX + D3 Web App</title>
+    <script src="node_modules/htmx.org/dist/htmx.min.js"></script>
+    <script src="node_modules/d3/dist/d3.min.js"></script>
+    <script src="app.js" type="module"></script>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <h1>My Dynamic Web App</h1>
+    <div id="content">
+        <button hx-get="/api/data" hx-target="#result" hx-trigger="click">
+            Load Data
+        </button>
+        <div id="result"></div>
+    </div>
+    <div id="chart"></div>
+</body>
+</html>
+
