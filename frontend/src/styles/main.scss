@@ -24,7 +24,7 @@ body {
   transition: background-color 0.3s, color 0.3s;
 
   &.light-mode {
-    background-color: $light-yellow;
+    background-color: $light-purple;
     color: $dark-navy;
   }
 
@@ -51,7 +51,7 @@ header {
     cursor: pointer;
     
     .light-mode & {
-      background-color: $light-purple;
+      background-color: $light-peach;
       color: white;
     }
 
@@ -75,6 +75,10 @@ header {
 
 .main-chart {
   grid-row: 1;
+}
+
+.line-chart {
+  width: 100%;
 }
 
 .secondary-charts {
