@@ -4,7 +4,7 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "start": "bun run --hot src/index.html",
+    "start": "bun run --watch server.ts",
     "build:css": "sass src/styles/main.scss:src/styles.css --style compressed",
     "watch:css": "sass src/styles/main.scss:src/styles.css --watch",
     "build": "bun build ./src/app.ts --outdir ./src --minify"
